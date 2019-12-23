@@ -20,7 +20,7 @@
  * @see       https://github.com/LaSalleSoftware/lsv2-backup-pkg
  */
 
-namespace Lasallesoftware\Library;
+namespace Lasallesoftware\Backup;
 
 class Version
 {
