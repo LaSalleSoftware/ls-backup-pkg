@@ -35,7 +35,7 @@ class MySQL
     {
         $user = env('DB_USERNAME');
         $password = env('DB_PASSWORD');
-        $path = env('LASALLE_BACKUP_MYSQLDUMP_PATH');  // must have trailing slash
+        $path = env('LASALLE_BACKUP_MYSQLDUMP_PATH');
         $databaseToBackup = env('DB_DATABASE');
         $savedFileName = self::getFileName();
 
