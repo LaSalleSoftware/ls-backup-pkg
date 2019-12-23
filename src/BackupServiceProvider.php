@@ -24,12 +24,9 @@ namespace Lasallesoftware\Backup;
 
 // LaSalle Software classes
 // custom artisan commands
-use Lasallesoftware\Backup\Commands\DatabasebackupCommand;
-
-// Laravel classes
-use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Support\ServiceProvider;
-
+// Laravel classes
+use Lasallesoftware\Backup\Commands\DatabasebackupCommand;
 
 /**
  * Class BackupServiceProvider.
