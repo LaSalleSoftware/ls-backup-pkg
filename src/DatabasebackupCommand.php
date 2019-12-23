@@ -22,11 +22,14 @@
 
 namespace Lasallesoftware\Backup\Commands;
 
-// LaSalle Software class
-use Illuminate\Console\ConfirmableTrait;
-// Laravel classes
+// Laravel class
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+// LaSalle Software classes
+use Lasallesoftware\Backup\Database\MySQL;
 use Lasallesoftware\Library\Common\Commands\CommonCommand;
-use Symfony\Component\Console\Input\InputOption;
+// Symfony class
+use Symfony\Component\Process\Process;
 
 /**
  * Class DatabasebackupCommand.
@@ -38,8 +41,6 @@ use Symfony\Component\Console\Input\InputOption;
  */
 class DatabasebackupCommand extends CommonCommand
 {
-    use ConfirmableTrait;
-
     /**
      * The console command name.
      *
@@ -54,73 +55,61 @@ class DatabasebackupCommand extends CommonCommand
      */
     protected $description = 'The LaSalle Software custom database backup command.';
 
-    /**
-     * Execute the console command.
-     */
     public function handle()
     {
-        echo "\n\n====================================================================\n";
-        echo '              ** start lsbackup:databasebackup **';
-        echo "\n====================================================================\n";
+        // STEP 1: figure out the mysqldump command
+        $mysqldumpCommand = MySQL::getMySQLDumpCommand();
 
-        /*
-        if ('production' == strtolower(app('config')->get('app.env'))) {
-            $this->info('Cancelled running lslibrary:customdrop because this is a production environment.');
-
-            return;
+        // STEP 2: if this is the first time running a backup, then create the local temporary folder
+        if (!file_exists(MySQL::getLocalTemporaryBackupFolder())) {
+            mkdir(MySQL::getLocalTemporaryBackupFolder(), 0777, true);
         }
 
-        if (!$this->confirm('Do you really want to drop your database?')) {
-            $this->info('Did not drop database tables because you did not confirm.');
+        // STEP 3: run the mysqldump command
 
-            return;
-        }
+        // 5 minute timeout, yes I am hardcoding this number
+        $timeout = 60 * 5;
 
-        $database = $this->input->getOption('database');
+        // https://symfony.com/doc/current/components/process.html
+        $process = Process::fromShellCommandline($mysqldumpCommand, null, null, null, $timeout);
+        $process->run();
 
-        //$this->dropAllViews($database);
-        //$this->info('Dropped all views successfully.');
+        // STEP 3: upload the newly created database "dump" file to AWS S3
+        $AwsPath = $this->bookendWithSlash(env('LASALLE_BACKUP_AWS_FOLDER_PATH'));
+        $fileName = MySQL::getFileName();
+        $storage = Storage::createS3Driver([
+            'driver' => 's3',
+            'key' => env('LASALLE_BACKUP_AWS_ACCESS_KEY_ID'),
+            'secret' => env('LASALLE_BACKUP_AWS_SECRET_ACCESS_KEY'),
+            'region' => env('LASALLE_BACKUP_AWS_REGION'),
+            'bucket' => env('LASALLE_BACKUP_AWS_BUCKET'),
+        ]);
 
-        $this->dropAllTables($database);
+        $storage->put($AwsPath.$fileName, file_get_contents(MySQL::getLocalTemporaryBackupFolder().'/'.$fileName));
 
-        $this->info('  ...just successfully dropped all your database tables...');
+        // STEP 4: Delete the newly created database "dump" file from the local folder
+        $command = 'rm '.MySQL::getLocalTemporaryBackupFolder().'/'.$fileName;
+        $timeout = 60 * 5; // 5 minute timeout
 
-        echo "\n  -------------------------------\n";
-        if ($this->confirm('  *** do you want to run php artisan migrate? ***')) {
-            $this->call('migrate');
-            echo "\n";
-            $this->info('  ...just ran php artisan migrate...');
-        } else {
-            $this->info(' (did *not* run php artisan migrate)');
-        }
-
-        echo "\n  -------------------------------\n";
-        if ($this->confirm('  *** do you want to run php artisan lslibrary:customseed?***')) {
-            $this->call('lslibrary:customseed');
-            echo "\n";
-            $this->info('  ...just ran php artisan lslibrary:customseed...');
-        } else {
-            $this->info(' (did *not* run php artisan lslibrary:customseed)');
-        }
-
-        //echo "\n\n";
-
-        echo "\n\n====================================================================\n";
-        echo '              ** lslibrary:customdrop is finished **';
-        echo "\n====================================================================\n\n";
-
-        */
+        $process = Process::fromShellCommandline($command, null, null, null, $timeout);
+        $process->run();
     }
 
     /**
-     * Get the console command options.
+     * Start and end a string with '/'.
      *
-     * @return array
+     * @param string $text
      */
-    protected function getOptions()
+    protected function bookendWithSlash($text): string
     {
-        return [
-            ['database', null, InputOption::VALUE_OPTIONAL, 'The database connection to use'],
-        ];
+        if ('/' != Str::substr($text, 0, 1)) {
+            $text = '/'.$text;
+        }
+
+        if ('/' != Str::substr($text, -1, 1)) {
+            $text .= '/';
+        }
+
+        return $text;
     }
 }
