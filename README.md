@@ -31,6 +31,24 @@ Leave ```LASALLE_BACKUP_AWS_FOLDER_PATH``` blank if there is no folder (ie, if y
 
 Specify your [time zone](https://www.php.net/manual/en/timezones.php) in the ```LASALLE_BACKUP_TIMEZONE``` enviornment variable. 
 
+#### Set up your path to the mysqldump command
+
+If you need to specify the path to the mysqldump command, then do so here. Please include a trailing slash. For example, the MAMP Pro path to mysqldump is:
+
+```LASALLE_BACKUP_MYSQLDUMP_PATH=/Applications/MAMP/Library/bin/```
+
+If you do not need to specify the path, the please just leave it blank:
+
+```LASALLE_BACKUP_MYSQLDUMP_PATH=```
+
+#### Set up your single transaction option environment variable
+
+If all your database tables are the InnoDB engine, then you should use the --single-transaction option with mysqldump:
+
+```LASALLE_BACKUP_SINGLE_TRANSACTION_OPTION=yes```
+
+See [https://dev.mysql.com/doc/refman/8.0/en/mysqldump.html#option_mysqldump_single-transaction](https://dev.mysql.com/doc/refman/8.0/en/mysqldump.html#option_mysqldump_single-transaction).
+
 #### Set up your CRON job
 
 If you want your backups to run automatically, set up a CRON job:
@@ -40,6 +58,7 @@ If you want your backups to run automatically, set up a CRON job:
 The above sets the backup to run every minute. Preferably, run it at, say, 4:00am nightly. 
 
 Forge has a facility to [manage CRON entries](https://forge.laravel.com/docs/1.0/resources/scheduler.html). 
+
 
 ## Security
 
