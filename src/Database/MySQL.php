@@ -52,7 +52,9 @@ class MySQL
 
         // All my database tables are the 'InnoDB' engine
         // https://dev.mysql.com/doc/refman/8.0/en/mysqldump.html#option_mysqldump_single-transaction
-        $command[] = '--single-transaction';
+        if ('yes' == env('LASALLE_BACKUP_SINGLE_TRANSACTION_OPTION')) {
+            $command[] = '--single-transaction';
+        }
 
         $command[] = $databaseToBackup;
 
