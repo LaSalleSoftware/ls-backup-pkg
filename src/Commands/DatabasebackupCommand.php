@@ -64,21 +64,21 @@ class DatabasebackupCommand extends CommonCommand
         // 5 minute timeout, yes I am hardcoding this number
         $timeout = 60 * 5;
 
-        // STEP 2: figure out the mysqldump command
+        // STEP 3: figure out the mysqldump command
         $mysqldumpCommand = MySQL::getMySQLDumpCommand($filename);
 
-        // STEP 3: if this is the first time running a backup, then create the local temporary folder
+        // STEP 4: if this is the first time running a backup, then create the local temporary folder
         if (!file_exists(MySQL::getLocalTemporaryBackupFolder())) {
             mkdir(MySQL::getLocalTemporaryBackupFolder(), 0777, true);
         }
 
-        // STEP 3: run the mysqldump command
+        // STEP 5: run the mysqldump command
 
         // https://symfony.com/doc/current/components/process.html
         $process = Process::fromShellCommandline($mysqldumpCommand, null, null, null, $timeout);
         $process->run();
 
-        // STEP 3: upload the newly created database "dump" file to AWS S3
+        // STEP 6: upload the newly created database "dump" file to AWS S3
         $AwsPath = $this->bookendWithSlash(env('LASALLE_BACKUP_AWS_FOLDER_PATH'));
         $fileName = MySQL::getFileName();
         $storage = Storage::createS3Driver([
@@ -91,7 +91,7 @@ class DatabasebackupCommand extends CommonCommand
 
         $storage->put($AwsPath.$fileName, file_get_contents(MySQL::getLocalTemporaryBackupFolder().'/'.$fileName));
 
-        // STEP 4: Delete the newly created database "dump" file from the local folder
+        // STEP 7: Delete the newly created database "dump" file from the local folder
         $command = 'rm '.MySQL::getLocalTemporaryBackupFolder().'/'.$fileName;
 
         $process = Process::fromShellCommandline($command, null, null, null, $timeout);
