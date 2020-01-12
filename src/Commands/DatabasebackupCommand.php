@@ -57,18 +57,22 @@ class DatabasebackupCommand extends CommonCommand
 
     public function handle()
     {
-        // STEP 1: figure out the mysqldump command
-        $mysqldumpCommand = MySQL::getMySQLDumpCommand();
+        // STEP 1: get the backup's filename
+        $filename = MySQL::getFileName();
 
-        // STEP 2: if this is the first time running a backup, then create the local temporary folder
+        // STEP 2: set contstants
+        // 5 minute timeout, yes I am hardcoding this number
+        $timeout = 60 * 5;
+
+        // STEP 2: figure out the mysqldump command
+        $mysqldumpCommand = MySQL::getMySQLDumpCommand($filename);
+
+        // STEP 3: if this is the first time running a backup, then create the local temporary folder
         if (!file_exists(MySQL::getLocalTemporaryBackupFolder())) {
             mkdir(MySQL::getLocalTemporaryBackupFolder(), 0777, true);
         }
 
         // STEP 3: run the mysqldump command
-
-        // 5 minute timeout, yes I am hardcoding this number
-        $timeout = 60 * 5;
 
         // https://symfony.com/doc/current/components/process.html
         $process = Process::fromShellCommandline($mysqldumpCommand, null, null, null, $timeout);
@@ -89,7 +93,6 @@ class DatabasebackupCommand extends CommonCommand
 
         // STEP 4: Delete the newly created database "dump" file from the local folder
         $command = 'rm '.MySQL::getLocalTemporaryBackupFolder().'/'.$fileName;
-        $timeout = 60 * 5; // 5 minute timeout
 
         $process = Process::fromShellCommandline($command, null, null, null, $timeout);
         $process->run();

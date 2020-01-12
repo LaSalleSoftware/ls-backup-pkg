@@ -31,13 +31,13 @@ class MySQL
      *
      * @return string
      */
-    public static function getMySQLDumpCommand()
+    public static function getMySQLDumpCommand($filename = null)
     {
         $user = env('DB_USERNAME');
         $password = env('DB_PASSWORD');
         $path = env('LASALLE_BACKUP_MYSQLDUMP_PATH');
         $databaseToBackup = env('DB_DATABASE');
-        $savedFileName = self::getFileName();
+        $savedFileName = $filename != null ? $filename : self::getFileName();
 
         $command = [$path.'mysqldump'];
         $command[] = '-u '.$user;
