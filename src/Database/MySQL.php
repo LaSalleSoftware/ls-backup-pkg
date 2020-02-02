@@ -33,11 +33,12 @@ class MySQL
      */
     public static function getMySQLDumpCommand($filename = null)
     {
+        if (is_null($filename)) return;
+
         $user = env('DB_USERNAME');
         $password = env('DB_PASSWORD');
         $path = env('LASALLE_BACKUP_MYSQLDUMP_PATH');
         $databaseToBackup = env('DB_DATABASE');
-        $savedFileName = $filename != null ? $filename : self::getFileName();
 
         $command = [$path.'mysqldump'];
         $command[] = '-u '.$user;
@@ -58,7 +59,7 @@ class MySQL
 
         $command[] = $databaseToBackup;
 
-        return implode(' ', $command).' > '.self::getLocalTemporaryBackupFolder().'/'.$savedFileName;
+        return implode(' ', $command).' > '.self::getLocalTemporaryBackupFolder().'/'.$fileName;
     }
 
     /**
