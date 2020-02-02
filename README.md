@@ -13,7 +13,11 @@ I have drawn obvious inspiration from [Laravel Backup](https://github.com/spatie
 
 ## Caveat
 
-I cannot stress enough how casual this package is. It's sole intention is to scratch a personal itch. No doubt you are better off with Spatie's package! Also, Forge is coming out with a new database backup feature, and Vapor has its own database backup feature.
+I cannot stress enough how casual this package is! It's sole intention is to scratch a personal itch. 
+
+No doubt you are better off with Spatie's package! 
+
+Also, Forge is coming out with a new database backup feature, and Vapor has its own database backup feature.
 
 ## Security
 
