@@ -11,6 +11,10 @@ I want a very clean, and very lean, way to backup my admin app's database to Ama
 
 I have drawn obvious inspiration from [Laravel Backup](https://github.com/spatie/laravel-backup) and [another Spatie package](https://github.com/spatie/db-dumper). And, from over a decade of using the incredible [Akeeba Backup](https://www.akeebabackup.com/). 
 
+## Caveat
+
+I cannot stress enough how casual this package is. It's sole intention is to scratch a personal itch. No doubt you are better off with Spatie's package! Also, Forge is coming out with a new database backup feature, and Vapor has its own database backup feature.
+
 ## Security
 
 If you discover any security related issues, please email Bob Bloom at "bob dot bloom at lasallesoftware dot ca" instead of using the issue tracker.
