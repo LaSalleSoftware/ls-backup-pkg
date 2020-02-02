@@ -89,13 +89,13 @@ class DatabasebackupCommand extends CommonCommand
             'bucket' => env('LASALLE_BACKUP_AWS_BUCKET'),
         ]);
 
-        //$storage->put($AwsPath.$fileName, file_get_contents(MySQL::getLocalTemporaryBackupFolder().'/'.$fileName));
+        $storage->put($AwsPath.$fileName, file_get_contents(MySQL::getLocalTemporaryBackupFolder().'/'.$fileName));
 
         // STEP 7: Delete the newly created database "dump" file from the local folder
         $command = 'rm '.MySQL::getLocalTemporaryBackupFolder().'/'.$fileName;
 
-        //$process = Process::fromShellCommandline($command, null, null, null, $timeout);
-        //$process->run();
+        $process = Process::fromShellCommandline($command, null, null, null, $timeout);
+        $process->run();
     }
 
     /**
