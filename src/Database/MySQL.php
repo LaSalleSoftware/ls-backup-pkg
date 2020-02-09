@@ -59,7 +59,7 @@ class MySQL
 
         $command[] = $databaseToBackup;
 
-        return implode(' ', $command).' > '.self::getLocalTemporaryBackupFolder().'/'.$fileName;
+        return implode(' ', $command).' > '.self::getLocalTemporaryBackupFolder().'/'.$filename;
     }
 
     /**
