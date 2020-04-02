@@ -80,7 +80,7 @@ class DatabasebackupCommand extends CommonCommand
 
         // STEP 6: upload the newly created database "dump" file to AWS S3
         $AwsPath = $this->bookendWithSlash(env('LASALLE_BACKUP_AWS_FOLDER_PATH'));
-        //$fileName = MySQL::getFileName();
+
         $storage = Storage::createS3Driver([
             'driver' => 's3',
             'key' => env('LASALLE_BACKUP_AWS_ACCESS_KEY_ID'),
@@ -89,9 +89,10 @@ class DatabasebackupCommand extends CommonCommand
             'bucket' => env('LASALLE_BACKUP_AWS_BUCKET'),
         ]);
 
-        //$storage->put($AwsPath.$fileName, file_get_contents(MySQL::getLocalTemporaryBackupFolder().'/'.$fileName));
+        $storage->put($AwsPath.$fileName, file_get_contents(MySQL::getLocalTemporaryBackupFolder().'/'.$fileName));
 
         // STEP 7: Delete the newly created database "dump" file from the local folder
+        //         CHANGED to deleting all sql files
         //$command = 'rm '.MySQL::getLocalTemporaryBackupFolder().'/'.$fileName;
         $command = 'rm '.MySQL::getLocalTemporaryBackupFolder().'/*.sql';
 
