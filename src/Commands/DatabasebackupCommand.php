@@ -58,18 +58,18 @@ class DatabasebackupCommand extends CommonCommand
     public function handle()
     {
         // STEP 1: get the backup's filename
-        $filename = MySQL::getFileName();
+        $fileName = MySQL::getFileName();
 
         // STEP 2: set contstants
         // 5 minute timeout, yes I am hardcoding this number
         $timeout = 60 * 5;
 
         // STEP 3: figure out the mysqldump command
-        $mysqldumpCommand = MySQL::getMySQLDumpCommand($filename);
+        $mysqldumpCommand = MySQL::getMySQLDumpCommand($fileName);
 
         // STEP 4: if this is the first time running a backup, then create the local temporary folder
         if (!file_exists(MySQL::getLocalTemporaryBackupFolder())) {
-            mkdir(MySQL::getLocalTemporaryBackupFolder(), 0777, true);
+            mkdir(MySQL::getLocalTemporaryBackupFolder(), 0755, true);
         }
 
         // STEP 5: run the mysqldump command
@@ -80,7 +80,7 @@ class DatabasebackupCommand extends CommonCommand
 
         // STEP 6: upload the newly created database "dump" file to AWS S3
         $AwsPath = $this->bookendWithSlash(env('LASALLE_BACKUP_AWS_FOLDER_PATH'));
-        $fileName = MySQL::getFileName();
+        //$fileName = MySQL::getFileName();
         $storage = Storage::createS3Driver([
             'driver' => 's3',
             'key' => env('LASALLE_BACKUP_AWS_ACCESS_KEY_ID'),
@@ -89,10 +89,11 @@ class DatabasebackupCommand extends CommonCommand
             'bucket' => env('LASALLE_BACKUP_AWS_BUCKET'),
         ]);
 
-        $storage->put($AwsPath.$fileName, file_get_contents(MySQL::getLocalTemporaryBackupFolder().'/'.$fileName));
+        //$storage->put($AwsPath.$fileName, file_get_contents(MySQL::getLocalTemporaryBackupFolder().'/'.$fileName));
 
         // STEP 7: Delete the newly created database "dump" file from the local folder
-        $command = 'rm '.MySQL::getLocalTemporaryBackupFolder().'/'.$fileName;
+        //$command = 'rm '.MySQL::getLocalTemporaryBackupFolder().'/'.$fileName;
+        $command = 'rm '.MySQL::getLocalTemporaryBackupFolder().'/*.sql';
 
         $process = Process::fromShellCommandline($command, null, null, null, $timeout);
         $process->run();
