@@ -46,15 +46,29 @@ class MySQL
         //https://dev.mysql.com/doc/refman/8.0/en/mysqldump.html#option_mysqldump_password
         $command[] = '--password='.$password;
 
-        // "--opt" is shorthand for --add-drop-table --add-locks --create-options --disable-keys --extended-insert
-        // --lock-tables --quick --set-charset
-        // https://dev.mysql.com/doc/refman/8.0/en/mysqldump.html#option_mysqldump_opt
-        $command[] = '--opt';
+        
 
         // All my database tables are the 'InnoDB' engine
         // https://dev.mysql.com/doc/refman/8.0/en/mysqldump.html#option_mysqldump_single-transaction
         if ('yes' == env('LASALLE_BACKUP_SINGLE_TRANSACTION_OPTION')) {
             $command[] = '--single-transaction';
+
+            // "--opt" is shorthand for --add-drop-table --add-locks --create-options --disable-keys --extended-insert
+            // --lock-tables --quick --set-charset
+            // https://dev.mysql.com/doc/refman/8.0/en/mysqldump.html#option_mysqldump_opt
+            $command[] = '--opt';
+
+        } else {
+            $command[] = '--complete-insert';
+            $command[] = '--add-drop-table';           
+            $command[] = '--add-locks';
+            $command[] = '--create-options ';
+            $command[] = '--comments';
+            $command[] = '--disable-keys';
+            $command[] = '--dump-date';
+            $command[] = '--lock-tables';
+            $command[] = '--version';
+            $command[] = '--set-charset';
         }
 
         $command[] = $databaseToBackup;
