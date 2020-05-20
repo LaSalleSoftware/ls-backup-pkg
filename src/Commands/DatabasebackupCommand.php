@@ -74,7 +74,7 @@ class DatabasebackupCommand extends CommonCommand
 
         // STEP 5: run the mysqldump command
 
-        //echo "\n\n The mysqldump command = " . $mysqldumpCommand . "\n\n";
+     //   echo "\n\n The mysqldump command = " . $mysqldumpCommand . "\n\n";
 
         // https://symfony.com/doc/current/components/process.html
         $process = Process::fromShellCommandline($mysqldumpCommand, null, null, null, $timeout);
@@ -100,6 +100,9 @@ class DatabasebackupCommand extends CommonCommand
 
         $process = Process::fromShellCommandline($command, null, null, null, $timeout);
         $process->run();
+
+     
+        $this->info('  ' . $this->name . 'is finished!');
     }
 
     /**

@@ -33,43 +33,54 @@ class MySQL
      */
     public static function getMySQLDumpCommand($filename = null)
     {
-        if (is_null($filename)) return;
+        if (is_null($filename)) {
+            return;
+        }
 
-        $user = env('DB_USERNAME');
-        $password = env('DB_PASSWORD');
-        $path = env('LASALLE_BACKUP_MYSQLDUMP_PATH');
+
+        $user             = env('DB_USERNAME');
+        $password         = env('DB_PASSWORD');
+        $path             = env('LASALLE_BACKUP_MYSQLDUMP_PATH');
         $databaseToBackup = env('DB_DATABASE');
 
-        $command = [$path.'mysqldump'];
+        $command   = [$path.'mysqldump'];
         $command[] = '-u '.$user;
 
         //https://dev.mysql.com/doc/refman/8.0/en/mysqldump.html#option_mysqldump_password
         $command[] = '--password='.$password;
 
-        
 
+        // "--opt" is shorthand for --add-drop-table --add-locks --create-options --disable-keys --extended-insert
+        // --lock-tables --quick --set-charset
+
+        // "The --opt option turns on several settings that work together to perform a fast dump operation. 
+        // All of these settings are on by default, because --opt is on by default. Thus you rarely if ever 
+        // specify --opt. Instead, you can turn these settings off as a group by specifying --skip-opt, the 
+        // optionally re-enable certain settings by specifying the associated options later on the command line.
+
+        // https://dev.mysql.com/doc/refman/8.0/en/mysqldump.html#option_mysqldump_opt
+        // https://dev.mysql.com/doc/refman/8.0/en/mysqldump.html#option_mysqldump_opt --> SCROLL DOWN TO "Option Groups"
+
+        //$command[] = '--opt';
+        $command[] = '--skip-opt';
+
+        
         // All my database tables are the 'InnoDB' engine
         // https://dev.mysql.com/doc/refman/8.0/en/mysqldump.html#option_mysqldump_single-transaction
-        if ('yes' == env('LASALLE_BACKUP_SINGLE_TRANSACTION_OPTION')) {
+        if (env('LASALLE_BACKUP_SINGLE_TRANSACTION_OPTION') == 'yes') {
             $command[] = '--single-transaction';
-
-            // "--opt" is shorthand for --add-drop-table --add-locks --create-options --disable-keys --extended-insert
-            // --lock-tables --quick --set-charset
-            // https://dev.mysql.com/doc/refman/8.0/en/mysqldump.html#option_mysqldump_opt
-            $command[] = '--opt';
-
         } else {
-            $command[] = '--complete-insert';
-            $command[] = '--add-drop-table';           
-            $command[] = '--add-locks';
-            $command[] = '--create-options ';
-            $command[] = '--comments';
-            $command[] = '--disable-keys';
-            $command[] = '--dump-date';
-            $command[] = '--lock-tables';
-            $command[] = '--version';
-            $command[] = '--set-charset';
+            $command[] = '--lock-all-tables';
         }
+
+        // https://dev.mysql.com/doc/refman/8.0/en/mysqldump.html#mysqldump-option-summary
+        $command[] = '--complete-insert';
+        $command[] = '--add-drop-table';           
+        $command[] = '--create-options ';
+        $command[] = '--comments';
+        $command[] = '--disable-keys';
+        $command[] = '--dump-date';
+        $command[] = '--set-charset';
 
         $command[] = $databaseToBackup;
 
