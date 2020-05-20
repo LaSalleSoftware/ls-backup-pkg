@@ -1,11 +1,11 @@
 # LaSalle Software's Backup Package
 
 <p align="center">
-<a href="https://packagist.org/packages/lasallesoftware/lsv2-backup-pkg"><img src="https://poser.pugx.org/lasallesoftware/lsv2-backup-pkg/v/stable.svg" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/lasallesoftware/lsv2-backup-pkg"><img src="https://poser.pugx.org/lasallesoftware/lsv2-backup-pkg/license.svg" alt="License"></a>
+<a href="https://packagist.org/packages/lasallesoftware/ls-backup-pkg"><img src="https://poser.pugx.org/lasallesoftware/ls-backup-pkg/v/stable.svg" alt="Latest Stable Version"></a>
+<a href="https://packagist.org/packages/lasallesoftware/ls-backup-pkg"><img src="https://poser.pugx.org/lasallesoftware/ls-backup-pkg/license.svg" alt="License"></a>
 </p>
 
-Backup package for my LaSalle Software Version 2.
+Backup package for my LaSalle Software.
 
 I want a very clean, and very lean, way to backup my admin app's database to Amazon Web Service's S3. So I created this package. This is likely the most self serving package of my LaSalle Software suite, because the code is so darn specific to my own needs.
 
