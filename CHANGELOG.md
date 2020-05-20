@@ -1,6 +1,9 @@
 # CHANGE LOG
 
-## VERSION 2.2.1 (coming!)
+## VERSION 2.2.2 (coming!)
+
+## VERSION 2.2.1 (May 19, 2020)
+* [v2.2.1 issues](https://github.com/LaSalleSoftware/lsv2-library-pkg/milestone/12?closed=1)
 
 ## VERSION 2.2.0 (May 19, 2020)
 * [v2.2.0 issues](https://github.com/LaSalleSoftware/lsv2-library-pkg/milestone/11?closed=1)
