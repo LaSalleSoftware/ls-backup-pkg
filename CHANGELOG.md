@@ -1,8 +1,11 @@
 # CHANGE LOG
 
-## VERSION 2.2.3 (coming!)
+## VERSION 2.2.4 (coming!)
 
-## VERSION 2.2.1 (May 30, 2020)
+## VERSION 2.2.3 (June 15, 2020)
+* [v2.2.3 issues](https://github.com/LaSalleSoftware/ls-backup-pkg/milestone/14?closed=1)
+
+## VERSION 2.2.2 (May 30, 2020)
 * [v2.2.2 issues](https://github.com/LaSalleSoftware/ls-backup-pkg/milestone/13?closed=1)
 
 ## VERSION 2.2.1 (May 19, 2020)
