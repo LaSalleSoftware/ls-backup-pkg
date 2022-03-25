@@ -2,7 +2,10 @@
 
 ## VERSION 2.2.6 (coming!)
 
-## VERSION 2.2.5 (January 20, 2020)
+## VERSION 2.3.0 (March 25, 2022)
+* [v2.3.0 issues](https://github.com/LaSalleSoftware/ls-backup-pkg/milestone/17?closed=1)
+
+## VERSION 2.2.5 (January 20, 2022)
 * [v2.2.5 issues](https://github.com/LaSalleSoftware/ls-backup-pkg/milestone/16?closed=1)
 
 ## VERSION 2.2.4 (June 17, 2021)
